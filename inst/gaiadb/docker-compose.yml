@@ -2,12 +2,14 @@ version: "3.9"
 
 services:
   postgis:
-    container_name: gis_postgis
+    container_name: gaia-postgis
     build: ./
-    image: gis_postgis
+    image: gaia_postgis
     restart: always
     ports:
       - "5433:5432"
+    networks:
+      - gaiadb
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=mysecretpassword
@@ -17,4 +19,9 @@ services:
     
 volumes:
   pgdata:
-    name: gis_pgdata
+    name: gaiadb_pgdata
+
+networks:
+  gaiadb:
+    name: gaiadb
+    driver: bridge

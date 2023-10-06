@@ -8,7 +8,7 @@ app = Flask(__name__)
 log = logging.getLogger('werkzeug')
 log.disabled = True
 
-BASE_PATH='http://solr:8983/solr/ohdsi-dcat/select?wt=json&'
+BASE_PATH='http://gaia-solr:8983/solr/ohdsi-dcat/select?wt=json&'
 
 @app.route('/', methods=["GET","POST"])
 def index():
