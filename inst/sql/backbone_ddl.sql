@@ -111,7 +111,11 @@ CREATE TABLE IF NOT EXISTS backbone.data_source (
 	download_filename varchar(100) NULL,
 	download_url varchar(100) NULL,
 	download_auth varchar(100) NULL,
-	documentation_url varchar(100) NULL
+	documentation_url varchar(100) NULL,
+	title varchar(100) NULL,
+	creator varchar(100) NULL,
+	description varchar NULL,
+	subjects varchar(100) NULL
 );
 
 

@@ -8,14 +8,13 @@ app = Flask(__name__)
 log = logging.getLogger('werkzeug')
 log.disabled = True
 
-BASE_PATH='http://gaia-solr:8983/solr/ohdsi-dcat/select?wt=json&'
+BASE_PATH='http://gaia-solr:8983/solr/gaia/select?wt=json&'
 
 @app.route('/', methods=["GET","POST"])
 def index():
-    collection = 'all'
     query, active = None, None
-    query_parameters = {"q": "gdsc_collections:*"}
-    q, qf = "", "gdsc_collections "
+    query_parameters = {"q": "*:*"}
+    q, qf = "*:*", ""
     numresults = 1
     results = []
 
@@ -23,19 +22,14 @@ def index():
     # to gather results to be displayed
     if request.method == "POST":
         query = request.form["searchTerm"]
-        collection = request.form["collection"]
         if 'active' in request.form:
             active = request.form["active"]
 
-        #print ('collection:', collection)
         #print ('query:', query)
         #print ('active:', active)
 
-        q = collection
-        if collection == 'all' or collection == '*': 
-            collection = '*'
-            q = ""
-        query_parameters = {"q": "gdsc_collections:*" + collection}
+        q = "*;*"
+        query_parameters = {"q": "*:*"}
         if query is not None and query != "":
             qf += "dct_title dct_keywords dct_description gdsc_attributes"
             if len(q) > 0: q += " "
@@ -45,7 +39,7 @@ def index():
             qf += "gdsc_up"
             if len(q) > 0: q += " "
             q += "true"
-        if qf != "gdsc_collections ":
+        if qf != "":
             query_parameters = {
               "q.op": "AND",
               "defType": "dismax",
@@ -55,7 +49,8 @@ def index():
 
     # query for information and return results
     query_string  = urlencode(query_parameters)
-    #print(query_string)
+    print(query_string)
+    print('hello')
     while numresults > len(results): 
         connection = urlopen("{}{}".format(BASE_PATH, query_string))
         response = simplejson.load(connection)
@@ -66,13 +61,14 @@ def index():
         #print('loop:',query_string) 
     
     if results == None: results=[]
-    return render_template('index.html', collection=collection, query=query, active=active, numresults=numresults, results=results)
+    return render_template('index.html',  query=query, active=active, numresults=numresults, results=results)
 
 @app.route('/detail/<name_id>', methods=["GET","POST"])
 def detail(name_id):
 
     query_parameters = {"q": "gdsc_tablename:" + name_id}
     query_string  = urlencode(query_parameters)
+    print(query_string)
     connection = urlopen("{}{}".format(BASE_PATH, query_string))
     response = simplejson.load(connection)
     document = response['response']['docs'][0]
@@ -83,4 +79,4 @@ def detail(name_id):
     return render_template('detail.html', name_id=name_id, document=document, referrer=request.args)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0',debug=True,use_reloader=True)/gdsc
+    app.run(host='0.0.0.0',debug=True,use_reloader=True)/ohdsi
