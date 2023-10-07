@@ -20,9 +20,12 @@
             <input type="hidden" id="collection" name="collection" value="{{ referrer.collection }}">
             <input type="hidden" id="searchTerm" name="searchTerm" value="{{ referrer.query if (referrer.query != "" and referrer.query != None) else "" }}">
           </form>
-          <a href="/">gdsc</a>&nbsp;>&nbsp; 
-          <a href="#" onclick="javascript:document.getElementById('filterForm').submit();">search</a>
+          <a href="/">gdsc</a>
+          {% if referrer.query != "" and referrer.query != None and referrer.query != "None" %}
+          &nbsp;>&nbsp;<a href="#" onclick="javascript:document.getElementById('filterForm').submit();">search [{{ referrer.query }}]
+          {% endif %}</a>
         </div>
+        {% autoescape off %}
         <div class="row">
           <div class="col-7 align-top">
             <h4 class="float-left">{% if document['dct_title'] %}{{ document['dct_title'][0] }}{% endif %}</h4>
@@ -73,7 +76,7 @@
                       </div>    
                       {% for attr in document['gdsc_attributes'] %}
                       <div class="row grid-color">
-                        <div class="col-1"><div id="variable-{{ attr[0] }}" class="circle red-fill" onclick="javascrip:loadvar({{ attr[0] }});"></div></div>
+                        <div class="col-1"><div id="variable-{{ attr[0] }}" class="circle red-fill" onclick="javascript:loadvar({{ attr[0] }});"></div></div>
                         <div class="col-1">{{ attr[0] }}</div>
                         <div class="col-2">{{ attr[1] }}</div>
                         <div class="col-6">{{ attr[2] }}</div>
@@ -89,13 +92,15 @@
         </div>
       </div>
       <script>
-        function(variable_id) {
+        var loadvar=function(variable_id) {
+          console.log('starting with: '+variable_id.toString());
           $.ajax({
             type: 'POST',
-            url: 'http://gaia-r:8000/load?variable_id=' + variable_id,
+            url: '/load/' + variable_id,
             success: function (resp) {
                 console.log(resp)
             }});
         }
       </script>
+      {% endautoescape %}
 {% endblock %}

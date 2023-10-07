@@ -59,6 +59,14 @@
                     {{ ", ".join(document['dcat_keyword']) }}
                   </span>
                   {% endif %}
+                  {% if document['found_in'] %}
+                  {% if document['found_in']['gdsc_attributes'] and document['found_in']['gdsc_attributes']|length > 0 %}
+                  <span class="mt-1 d-block"><b>Attributes with <span class="highlight-term">{{ query }}</span>:</b>
+                    {% for attr in document['found_in']['gdsc_attributes'] %}{{ attr[1] }}{{ ", " if not loop.last else "" }}{% endfor %}
+                    {# { ", ".join([attr[0] for attr in document['found_in']['gdsc_attributes']]) } #}
+                  </span>
+                  {% endif %}
+                  {% endif %}
                 </div>
               </div>
             </div>
