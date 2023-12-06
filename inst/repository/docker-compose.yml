@@ -14,7 +14,7 @@ services:
     build: ./searchApp/
     image: gaia_repo
     ports:
-      - "5000:5000"
+      - "5150:5150"
     networks:
       - gaiadb
     links:

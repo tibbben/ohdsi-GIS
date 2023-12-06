@@ -9,6 +9,76 @@
       .grid-color:nth-child(even) {
         background:#fff;
       }
+      @keyframes spin {
+          0% { transform: rotate(360deg); }
+          100% { transform: rotate(0deg); }
+      }
+      @-moz-keyframes spin {
+          0% { -moz-transform: rotate(360deg); }
+          100% { -moz-transform: rotate(0deg); }
+      }
+      @-webkit-keyframes spin {
+          0% {-webkit-transform: rotate(360deg); }
+          100% { -webkit-transform: rotate(0deg); }
+      }
+      @-o-keyframes spin {
+          0% { -o-transform: rotate(360deg); }
+          100% { -o-transform: rotate(0deg); }
+      }
+      .spin {
+          width: 10px;
+          height: 10px;
+          border-radius: 6px 6px 6px 6px;
+          overflow: hidden;
+          margin-left: 5px;
+          margin-top: 5px;
+          display: inline-block;
+          position: absolute;
+          animation: spin 2s linear 0s infinite reverse;
+          -moz-animation: 2s linear 0s reverse none infinite spin;
+          -webkit-animation: spin 2s linear 0s infinite reverse;
+          -0-animation: spin 2s linear 0s infinite reverse;
+          -webkit-animation-play-state: running;
+          -o-animation-play-state: running;
+          -moz-animation-play-state: running;
+          animation-play-state: running;
+      }
+      .yin-yang {
+          animation: spin 4s linear 0s infinite normal;
+          -moz-animation: 4s linear 0s normal none infinite spin;
+          -webkit-animation: spin 4s linear 0s infinite normal;
+          -0-animation: spin 4s linear 0s infinite normal;
+          width: 9px;
+          height: 4px;
+          background: #eee;
+          border-color: red;
+          border-style: solid;
+          border-width: 0px 0.5px 5px 0.5px;
+          border-radius: 100%;
+          position: relative;
+      }
+      .yin-yang:before {
+          content:"";
+          position: absolute;
+          top: 50%;
+          left: 0;
+          background: #eee;
+          border: 2px solid red;
+          border-radius: 100%;
+          width: 1px;
+          height: 1px;
+      }
+      .yin-yang:after {
+          content:"";
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          background: red;
+          border: 2px solid #eee;
+          border-radius:100%;
+          width: 1px;
+          height: 1px;
+      }
     </style>
 {% endblock %}
 
@@ -43,7 +113,7 @@
                 {% if document['dct_publisher'] %}{{ document['dct_publisher'][0] }}{% endif %}.
                 {% if document['dct_identifier'] %}<a href="{{ document['dct_identifier'][0] }}" target="_blank" class="text-wrap text-break">{{ document['dct_identifier'][0] }}</a>.{% endif %}
                 {% if document['dct_modified'] %} last updated: {{ document['dct_modified'][0][:10] }}{% endif %}
-                {% if document['dcat_downloadURL'] %} from <a href="{{ document['dcat_downloadURL'][0] }}" target="_blank">{{ document['dcat_downloadURL'][0] }}</a>{% endif %} 
+                <!-- {% if document['dcat_downloadURL'] %} from <a href="{{ document['dcat_downloadURL'][0] }}" target="_blank">{{ document['dcat_downloadURL'][0] }}</a>{% endif %} -->
                 {% if document['dct_accrualPeriodicity'] %} (update frequency: {{ document['dct_accrualPeriodicity'][0] }}){% endif %}.
                 {% if document['dct_description'] %}
                 <span class="mt-2 d-block"><b>Abstract:</b> {{ document['dct_description'][0] }}</span>
@@ -76,7 +146,7 @@
                       </div>    
                       {% for attr in document['gdsc_attributes'] %}
                       <div class="row grid-color">
-                        <div class="col-1"><div id="variable-{{ attr[0] }}" class="circle red-fill" onclick="javascript:loadvar({{ attr[0] }});"></div></div>
+                        <div class="col-1"><div class="none"><div id="variable-{{ attr[0] }}" class="circle red-fill" onclick="javascript:loadvar({{ attr[0] }});"></div></div></div>
                         <div class="col-1">{{ attr[0] }}</div>
                         <div class="col-2">{{ attr[1] }}</div>
                         <div class="col-6">{{ attr[2] }}</div>
@@ -94,11 +164,16 @@
       <script>
         var loadvar=function(variable_id) {
           console.log('starting with: '+variable_id.toString());
+          var status_indicator = document.getElementById('variable-'+variable_id);
+          status_indicator.setAttribute('class', 'yin-yang');
+          status_indicator.parentElement.setAttribute('class', 'spin');
           $.ajax({
             type: 'POST',
             url: '/load/' + variable_id,
             success: function (resp) {
-                console.log(resp)
+                status_indicator.setAttribute('class', 'green-fill circle');
+                status_indicator.parentElement.setAttribute('class', 'none'); 
+                console.log(resp);
             }});
         }
       </script>

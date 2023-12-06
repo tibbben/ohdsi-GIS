@@ -51,7 +51,7 @@
                   {% if document['dct_modified'] %} last updated: {{ document['dct_modified'][0][:10] }}{% endif %}
                   {% if document['dcat_downloadURL'] %} Retreived from <a href="{{ document['dcat_downloadURL'][0] }}" target="_blank">{{ document['dcat_downloadURL'][0] }}</a>{% endif %} 
                   {% if document['dct_description'] %}
-                  <span class="mt-2 d-block"><b>Abstract:</b> {{ document['dct_description'][0] }}</span>
+                  <span class="mt-2 d-block"><b>Abstract:</b> {{ document['display_description'] }}</span>
                   {% endif %}
                   {% if document['dcat_keyword'] and document['dcat_keyword']|length > 0 %}
                   <span class="mt-1 d-block"><b>key words:</b>

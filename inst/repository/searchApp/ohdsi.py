@@ -167,4 +167,4 @@ def load(variable_id):
     return response
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0',debug=True,use_reloader=True)/ohdsi
+    app.run(host='0.0.0.0',debug=True,use_reloader=True,port=5150)/ohdsi
